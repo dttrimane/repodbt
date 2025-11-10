@@ -1,0 +1,49 @@
+name: Build and Commit DBT Docs
+ 
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      # 1️ Cloner le dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v4
+ 
+      # 2️ Installer Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+ 
+      # 3️ Installer dbt
+      - name: Install dbt
+        run: |
+          pip install dbt-core dbt-duckdb
+ 
+      # 4️ Générer la documentation
+      - name: Generate dbt docs
+        run: |
+          dbt deps
+          dbt compile
+          dbt docs generate
+ 
+      # 5️ Copier la doc vers le dossier /docs
+      - name: Copy docs to /docs
+        run: |
+          mkdir -p docs
+          cp -r target/* docs/
+ 
+      # 6️ Commit + Push le dossier /docs sur main
+      - name: Commit and push docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "Update dbt docs [automated]" || echo "No changes to commit"
+          git push

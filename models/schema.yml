@@ -1,0 +1,12 @@
+version: 2
+ 
+models:
+  - name: example_model
+    description: "Modèle d'exemple montrant la génération de documentation dbt."
+    columns:
+      - name: id
+        description: "Identifiant unique."
+      - name: date_sample
+        description: "Date d'exemple."
+      - name: montant
+        description: "Montant de démonstration."

@@ -11,35 +11,46 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
-      # 1️ Cloner le dépôt
+      # Cloner le dépôt
       - name: Checkout repository
         uses: actions/checkout@v4
  
-      # 2️ Installer Python
+      # Installer Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13.9"
  
-      # 3️ Installer dbt
+      # Installer dbt
       - name: Install dbt
         run: |
           pip install dbt-core dbt-duckdb
  
-      # 4️ Générer la documentation
+      # Créer le fichier profiles.yml pour DBT
+      - name: Create DBT profile
+        run: |
+          mkdir -p ~/.dbt
+          echo "dbt_demo_project:" > ~/.dbt/profiles.yml
+          echo "  target: dev" >> ~/.dbt/profiles.yml
+          echo "  outputs:" >> ~/.dbt/profiles.yml
+          echo "    dev:" >> ~/.dbt/profiles.yml
+          echo "      type: duckdb" >> ~/.dbt/profiles.yml
+          echo "      path: data/my_duckdb_file.duckdb" >> ~/.dbt/profiles.yml
+ 
+      # Génére la documentation
       - name: Generate dbt docs
         run: |
           dbt deps
           dbt compile
           dbt docs generate
  
-      # 5️ Copier la doc vers le dossier /docs
+      # Copier la doc vers /docs
       - name: Copy docs to /docs
         run: |
           mkdir -p docs
           cp -r target/* docs/
  
-      # 6️ Commit + Push le dossier /docs sur main
+      # Commit + Push le dossier /docs
       - name: Commit and push docs
         run: |
           git config user.name "github-actions[bot]"

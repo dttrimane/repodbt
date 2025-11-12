@@ -36,7 +36,10 @@ jobs:
           echo "    dev:" >> ~/.dbt/profiles.yml
           echo "      type: duckdb" >> ~/.dbt/profiles.yml
           echo "      path: data/my_duckdb_file.duckdb" >> ~/.dbt/profiles.yml
- 
+      # Génére la documentation
+      - name: Prepare Data Folder
+        run: mkdir -p data
+        
       # Génére la documentation
       - name: Generate dbt docs
         run: |

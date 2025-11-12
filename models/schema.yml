@@ -2,7 +2,7 @@ version: 2
  
 models:
   - name: example_model
-    description: "Modèle d'exemple montrant la génération de documentation dbt."
+    description: "Ceci est une nouvelle description pour tester la mise à jour automatique"
     columns:
       - name: id
         description: "Identifiant unique."
